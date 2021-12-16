@@ -74,15 +74,6 @@ $headerLogoLink.addEventListener('click', (event) => {
   router.changeURI('');
 });
 
-// const $filterLinkList = document.querySelectorAll('.main-nav-link');
-//
-// $filterLinkList.forEach(($filterLink) => {
-//   $filterLink.addEventListener('click', (event) => {
-//     const $target = event.target as HTMLElement;
-//     router.changeURI(`?filter=${$target.dataset.filter}`);
-//   });
-// });
-
 class MainPage {
   #productData: IProduct[] | null = [];
 
