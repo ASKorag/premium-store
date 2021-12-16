@@ -12,8 +12,8 @@ class Router {
   /** array of saved routes */
   #routes: TRoute[] = [];
 
-  /** current path (relative to the site root) */
-  #currentPath = '';
+  /** current route */
+  #currentRoute: TRoute | undefined;
 
   /** site root URI */
   readonly #root;
@@ -77,17 +77,18 @@ class Router {
    * @param force flag of forced route change (for the page reload to work by clicking on the current link)
    */
 
-  #changeRoute(force?: boolean) {
-    if (this.#currentPath !== this.#getPath() || force === true) {
-      this.#currentPath = this.#getPath();
+  #changeRoute(force?: boolean): void {
+    const newPath = this.#getPath();
 
-      const route = this.findRoute(this.#currentPath);
+    if (this.#currentRoute?.path !== newPath || force === true) {
+      this.#currentRoute = this.findRoute(newPath);
 
-      if (!route) {
-        throw new Error(`Path '${this.#currentPath}' is undefined`);
+      if (!this.#currentRoute) {
+        throw new Error(`Path '${newPath}' is undefined`);
       } else {
-        route.callback();
-        route.isCalled = true;
+        this.#currentRoute.callback();
+        this.#currentRoute.isCalled = true;
+        this.changeTitle();
       }
     }
   }
