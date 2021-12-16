@@ -27,14 +27,26 @@ class Router {
   }
 
   /**
+   * Method for change a title to a browser tab
+   */
+
+  changeTitle(): void {
+    if (this.#currentRoute) {
+      document.title = this.#currentRoute.title;
+    }
+  }
+
+  /**
    * Method for adding a route to a router
    * @param path relative path route
+   * @param title the title of the browser tab
    * @param callback callback function for route
    */
 
-  addRoute(path: string, callback: TRouteCallback) {
+  addRoute(path: string, title: string, callback: TRouteCallback): Router {
     this.#routes.push({
       path,
+      title,
       callback,
       isCalled: false,
     });
@@ -95,7 +107,7 @@ class Router {
    */
 
   changeURI(path: string): void {
-    if (path !== this.#currentPath) {
+    if (path !== this.#currentRoute?.path) {
       window.history.pushState(null, '', this.#root + path);
     } else {
       this.#changeRoute(true);

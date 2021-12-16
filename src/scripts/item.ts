@@ -106,6 +106,7 @@ class Item {
           console.log('Once');
           router.addRoute(
             `${product.type.toLowerCase()}/${product.data.id}`,
+            `${product.data.name}`,
             () =>
               Item.showSelectedItem(
                 product.data.id,

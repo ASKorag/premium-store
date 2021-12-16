@@ -26,22 +26,28 @@ import '@scss/filters.scss';
 const router = new Router(process.env.DEPLOY_PATH!);
 
 router
-  .addRoute('wishlist', () => {
+  .addRoute('wishlist', 'Wishlist', () => {
     Wishlist.createWishlist();
   })
-  .addRoute('shoppingcart', () => ShoppingList.createShoppingList())
-  .addRoute('', () => {
+  .addRoute('shoppingcart', 'Shopping Cart', () =>
+    ShoppingList.createShoppingList(),
+  )
+  .addRoute('', 'Premium Store', () => {
     Item.showMainNavContainer();
     Filter.addEvent(router);
     Filter.filterProducts('all', router);
   })
-  .addRoute('?filter=all', () => Filter.filterProducts('all', router))
-  .addRoute('?filter=vehicles', () => Filter.filterProducts('vehicles', router))
-  .addRoute('?filter=gold', () => Filter.filterProducts('gold', router))
-  .addRoute('?filter=premium', () =>
+  .addRoute('?filter=all', 'All products', () =>
+    Filter.filterProducts('all', router),
+  )
+  .addRoute('?filter=vehicles', 'Vehicles', () =>
+    Filter.filterProducts('vehicles', router),
+  )
+  .addRoute('?filter=gold', 'Gold', () => Filter.filterProducts('gold', router))
+  .addRoute('?filter=premium', 'Premium', () =>
     Filter.filterProducts('premium account', router),
   )
-  .addRoute('?filter=provisions', () =>
+  .addRoute('?filter=provisions', 'Provisions', () =>
     Filter.filterProducts('provisions', router),
   );
 
