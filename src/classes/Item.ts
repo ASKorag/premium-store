@@ -123,18 +123,20 @@ class Item {
           (100 * +product.data.price.actual.cost) /
             +product.data.price.basic.cost,
       );
-      sale = `<span class="item-price-sale">${discountAmount}%</span>`;
+      sale = `<span>${discountAmount}% </span>`;
     }
     if (product) {
       $item.innerHTML = `
-          <h2>${product.data.name}</h2>
+          <h2>${product.data.name}
+            <span> ${sale}</span>
+          </h2>
           <img src=${product.data.images.span_1x1} alt="${product.data.name}"/>
           <div class="item-container-purchase">
               <div class="item-price">
-                        <span class="item-price price-sale">${humanPrice(
+                        <span class="item-price-amount price-sale">${humanPrice(
                           product.data.price.basic.cost,
                         )} ${product.data.price.basic.currency}</span>
-                        ${sale}
+                        <span class = "item-arrow icon-arrow-right"></span>
                         ${actualPrice}
               </div>
               <button class="item-purchase-button ${
