@@ -121,6 +121,9 @@
   left: 0;
   z-index: 5;
 
+  list-style-type: none;
+  padding: 0;
+
   &:before {
     content: '';
     position: absolute;

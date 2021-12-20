@@ -1,29 +1,40 @@
+/**
+ * @module Filter
+ */
+
 import { IProduct, TFilter } from '@type/product';
-import Item from '@classes/Item';
-import lazy from '@scripts/lazy';
 import { IUser } from '@type/user';
-// import { main } from '@page/main';
-import HashRouter from '@classes/HashRouter';
-import LocalStorage, { IProductLocalStorageData } from '@classes/LocalStorage';
-import lazyBD from '@scripts/lazyBD';
+import { IProductLocalStorageData } from '@type/local-storage';
+
+import Item from '@classes/Item';
 import ProductAPI from '@api/product';
 import Wishlist from '@classes/Wishlist';
 
-export type SetActiveFilterType =
-  | 'all'
-  | 'vehicles'
-  | 'gold'
-  | 'premium account'
-  | 'provisions';
+import LocalStorage from '@classes/LocalStorage';
+
+import lazy from '@scripts/lazy';
+import lazyBD from '@scripts/lazyBD';
+
+/**
+ * Класс для фильтрации продуктов и работы с уже отфильтрованными продуктами
+ */
 
 class Filter {
+  //  #nation #type #tier используются для фильтрации продуктов типа техника
+  /** страна техники */
   static #nation: string | undefined;
 
+  /** тип техники */
   static #type: string | undefined;
 
+  /** уровень техники */
   static #tier: string | undefined;
 
-  static addEvent(router: HashRouter): void {
+  /**
+   * Метод для добавления обработчиков кнопок фильтров
+   */
+
+  static addEvent(): void {
     const $filterButtons: NodeListOf<Element> =
       document.querySelectorAll('.main-nav-link');
     $filterButtons.forEach((item: Node) => {
@@ -38,40 +49,37 @@ class Filter {
     });
   }
 
-  static filterProducts(filter: string | null, router: HashRouter) {
+  /**
+   * Метод для фильтрации всех продуктов
+   * @param filter фильтр для сортировки
+   */
+
+  static filterProducts(filter: TFilter | 'All' | null) {
     let $target: HTMLElement | null;
     LocalStorage.getUserData().then((userData) => {
       if (userData) {
-        const actualFilter: any = filter;
+        const actualFilter = filter;
         $target = document.querySelector(`[data-filter=${filter}]`);
         $target?.classList.add('active-link');
 
         if (filter === 'All') {
-          this.createAllFilterProducts(userData, router);
+          this.createAllFilterProducts(userData);
         } else {
-          LocalStorage.getProductDataByFilter(actualFilter).then((data) => {
+          LocalStorage.getProductDataByFilter(actualFilter!).then((data) => {
             if (data)
-              this.createFilterProducts(
-                data,
-                userData,
-                data,
-                actualFilter,
-                router,
-              );
-          });
-          setTimeout(() => {
-            LocalStorage.updateProductDataByFilter(actualFilter).then(() => {});
+              this.createFilterProducts(data, userData, data, actualFilter!);
           });
         }
       }
     });
   }
 
-  static filterTechniqueProducts(
-    userData: IUser,
-    productData: IProduct[],
-    router: HashRouter,
-  ) {
+  /**
+   * Метод для фильтрации техники
+   * @param userData текущий пользователь
+   */
+
+  static filterTechniqueProducts(userData: IUser) {
     const techniqueProduct = LocalStorage.getLocalData(
       'Technique',
     ) as IProductLocalStorageData | null;
@@ -92,16 +100,23 @@ class Filter {
         }
         return check;
       });
-      Filter.showFilterProduct(filteredProducts, userData, productData, router);
+      Filter.showFilterProduct(filteredProducts, userData);
     }
   }
+
+  /**
+   * Метод для создания фильтрованных продуктов
+   * @param filteredProducts массив фильтрованных продуктов
+   * @param userData текущий пользователь
+   * @param productData массив всех продуктов
+   * @param filter фильтр для сортировки
+   */
 
   static createFilterProducts(
     filteredProducts: IProduct[],
     userData: IUser,
     productData: IProduct[],
     filter: string,
-    router: HashRouter,
   ) {
     const $visualContainer: HTMLElement | null = document.getElementById(
       'main-visual-container',
@@ -226,7 +241,7 @@ class Filter {
         this.#type = 'all';
         this.#tier = 'all';
         this.#nation = 'all';
-        this.filterTechniqueProducts(userData, productData, router);
+        this.filterTechniqueProducts(userData /* , productData, router */);
       });
       filterType.forEach((item) => {
         item.addEventListener('click', (e: any) => {
@@ -254,7 +269,7 @@ class Filter {
           e.currentTarget.parentElement.parentElement.lastElementChild.classList.toggle(
             'opened-list',
           );
-          this.filterTechniqueProducts(userData, productData, router);
+          this.filterTechniqueProducts(userData);
         });
       });
       filterList.forEach((item) => {
@@ -266,15 +281,16 @@ class Filter {
     if ($visualContainer) {
       $wrapper?.append($visualContainer);
     }
-    Filter.showFilterProduct(filteredProducts, userData, productData, router);
+    Filter.showFilterProduct(filteredProducts, userData);
   }
 
-  static showFilterProduct(
-    filteredProducts: IProduct[],
-    userData: IUser,
-    productData: IProduct[],
-    router: HashRouter,
-  ) {
+  /**
+   * Метод для показа фильтрованных продуктов
+   * @param filteredProducts массив фильтрованных продуктов
+   * @param userData текущий пользователь
+   */
+
+  static showFilterProduct(filteredProducts: IProduct[], userData: IUser) {
     const $visualContainer: HTMLElement | null = document.getElementById(
       'main-visual-container',
     );
@@ -291,16 +307,23 @@ class Filter {
       let itemCounter = 0;
       filteredProducts.forEach((value: IProduct) => {
         if (itemCounter < 20) {
-          $container.appendChild(Item.createItem(value, userData, router));
+          $container.appendChild(
+            Item.createItem(value, userData /* , router */),
+          );
           itemCounter += value.span;
         }
       });
     }
 
-    lazy(20, 100, userData, filteredProducts, new Item(), router);
+    lazy(20, 100, userData, filteredProducts, new Item());
   }
 
-  static createAllFilterProducts(userData: IUser, router: HashRouter) {
+  /**
+   * Метод для создания всех продуктов
+   * @param userData текущий пользователь
+   */
+
+  static createAllFilterProducts(userData: IUser) {
     const $visualContainer: HTMLElement | null = document.getElementById(
       'main-visual-container',
     );
@@ -315,10 +338,15 @@ class Filter {
     if ($visualContainer) {
       $wrapper?.append($visualContainer);
     }
-    Filter.showAllFilterProduct(userData, router);
+    Filter.showAllFilterProduct(userData);
   }
 
-  static showAllFilterProduct(userData: IUser, router: HashRouter) {
+  /**
+   * Метод для показа всех продуктов
+   * @param userData текущий пользователь
+   */
+
+  static showAllFilterProduct(userData: IUser) {
     const $visualContainer: HTMLElement | null = document.getElementById(
       'main-visual-container',
     );
@@ -332,10 +360,10 @@ class Filter {
       ProductAPI.getAllProductsByLazy(1, 40, LocalStorage.getCurrency()).then(
         (value) => {
           if (value) {
-            value.products.forEach((value: IProduct) => {
-              $container.appendChild(Item.createItem(value, userData, router));
+            value.products.forEach((product: IProduct) => {
+              $container.appendChild(Item.createItem(product, userData));
             });
-            lazyBD(40, 500, userData, new Item(), router);
+            lazyBD(40, 500, userData, new Item());
           }
         },
       );

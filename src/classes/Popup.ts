@@ -1,12 +1,24 @@
+/**
+ * @module Popup
+ */
+
 import { TPopupInputs, TLinkHandler } from '@type/popup';
 
+/**
+ * Класс для создания всплывающих окон
+ */
+
 class Popup {
+  /** элемент, вызвавший создание окна */
   #target: HTMLElement;
 
-  #linkHandler: TLinkHandler | undefined;
-
+  /** массив входных данных для заполнения формы */
   readonly #inputs: TPopupInputs; // хз, какой тут должен быть тип, он на все ругается. Передаются данные для инпутов: [0] - текст,[1] - тип инпута
 
+  /** коллбэк для ссылки восстановления пароля */
+  #linkHandler: TLinkHandler | undefined;
+
+  /** флаг для указания наличия в форме ссылки восстановления пароля */
   readonly #hasLink: boolean; // есть ли в попапе ссылка, по-хорошему, нужно было бы отпочковаться в другой класс с расширением, но ради одной ссылки не знаю, стоит ли
 
   constructor(
@@ -21,13 +33,21 @@ class Popup {
     this.#linkHandler = linkHandler;
   }
 
-  // каждый метод возвращает заполненный элемент HTML
+  /**
+   * Метод для создания заголовка формы
+   */
+
   createHeader(): HTMLHeadingElement {
     const title = this.#target.id.split('-').join(' '); // айдишник элемента, по которому кликнули переходит в читабельную форму
     const $header = document.createElement('h2'); // создать Н2
     $header.innerText = title; // записать
     return $header;
   }
+
+  /**
+   * Метод для создания формы
+   * @param linkHandler коллбэк для ссылки восстановления пароля
+   */
 
   createForm(linkHandler?: TLinkHandler): HTMLFormElement {
     const $form = document.createElement('form'); // создать форму
@@ -65,6 +85,10 @@ class Popup {
     return $form;
   }
 
+  /**
+   * Метод для создания кнопки OK
+   */
+
   static createButton(): HTMLButtonElement {
     // единственный адекватный метод без черни
     const $btn = document.createElement('button');
@@ -72,6 +96,13 @@ class Popup {
     $btn.innerText = 'OK';
     return $btn;
   }
+
+  /**
+   * Метод для создания ссылки
+   * @param str текст ссылки
+   * @param id ID для созданной ссылки
+   * @param handler коллбэк для созданной ссылки
+   */
 
   static createLink(
     str: string,
@@ -90,6 +121,10 @@ class Popup {
     return $link;
   }
 
+  /**
+   * Метод для создания крестика закрытия формы
+   */
+
   static createSpan(): HTMLSpanElement {
     // это крестик
     // можно по- идее сразу на него повесить лисенер на закрытие, как на линках, сейчас он вешается в функции closePopup,
@@ -99,6 +134,10 @@ class Popup {
     $cross.innerText = 'X';
     return $cross;
   }
+
+  /**
+   * Метод для создания самого всплывающего окна
+   */
 
   renderHTML(): HTMLDivElement {
     const $container = document.createElement('div'); // контейнер в обертке, оранжевый

@@ -1,8 +1,8 @@
 import HashRouter from '@classes/HashRouter';
 import Wishlist from '@classes/Wishlist';
 import ShoppingList from '@classes/ShoppingList';
-import Navigation from '@classes/Navigation';
-import Filter from '@scripts/filter';
+import NavPanel from '@classes/NavPanel';
+import Filter from '@classes/Filter';
 
 const router = new HashRouter();
 
@@ -14,34 +14,34 @@ router
     ShoppingList.createShoppingList(),
   )
   .addRoute('', 'Premium Store', () => {
-    Navigation.showMainNavContainer();
-    Filter.addEvent(router);
-    Filter.filterProducts('All', router);
+    NavPanel.showMainNavContainer();
+    Filter.addEvent();
+    Filter.filterProducts('All');
   })
   .addRoute('all', 'All products', () => {
-    Navigation.showMainNavContainer();
-    Filter.filterProducts('All', router);
-    Filter.addEvent(router);
+    NavPanel.showMainNavContainer();
+    Filter.filterProducts('All');
+    Filter.addEvent();
   })
   .addRoute('vehicles', 'Vehicles', () => {
-    Navigation.showMainNavContainer();
-    Filter.filterProducts('Technique', router);
-    Filter.addEvent(router);
+    NavPanel.showMainNavContainer();
+    Filter.filterProducts('Technique');
+    Filter.addEvent();
   })
   .addRoute('gold', 'Gold', () => {
-    Navigation.showMainNavContainer();
-    Filter.filterProducts('Gold', router);
-    Filter.addEvent(router);
+    NavPanel.showMainNavContainer();
+    Filter.filterProducts('Gold');
+    Filter.addEvent();
   })
   .addRoute('premium', 'Premium', () => {
-    Navigation.showMainNavContainer();
-    Filter.filterProducts('Premium', router);
-    Filter.addEvent(router);
+    NavPanel.showMainNavContainer();
+    Filter.filterProducts('Premium');
+    Filter.addEvent();
   })
   .addRoute('provisions', 'Provisions', () => {
-    Navigation.showMainNavContainer();
-    Filter.filterProducts('Provisions', router);
-    Filter.addEvent(router);
+    NavPanel.showMainNavContainer();
+    Filter.filterProducts('Provisions');
+    Filter.addEvent();
   });
 
 export default router;

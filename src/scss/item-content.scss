@@ -93,9 +93,24 @@
     position: fixed;
     bottom: 0;
     left: 0;
+    background: c.$baColorGray;
+  }
+
+  .button-purchase-added {
+    padding-left: 30px;
+    background: url('~@images/buttons/cart.png') no-repeat 80% 50%, #668048;
   }
 }
 
+
+@media screen and (max-device-width: s.$min-width) {
+  .item-container-purchase {
+    .item-price {
+      width: 50%;
+      justify-content: center;
+    }
+  }
+}
 
 .item-purchase-price {
 
@@ -135,6 +150,7 @@
   }
 }
 
+
 .item-container-description {
   grid-column-start: 1;
   grid-column-end: 3;
@@ -144,6 +160,7 @@
   gap: 1rem;
   color: c.$fColorDescription_p;
   font-size: s.$fzItem_description_p;
+  text-align: justify;
 
 
   @media screen and (max-device-width: s.$min-width) {

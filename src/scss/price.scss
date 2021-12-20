@@ -10,8 +10,9 @@
   width: 100%;
 }
 
+
 .item-sale {
-  background: rgba(255, 0, 0, 0.6);
+  background: no-repeat radial-gradient(closest-side, rgba(255, 0, 0, 1) 0%, rgba(255, 0, 0, 0.5) 60%, rgba(255, 0, 0, 0.1) 95%);
   padding: 8px;
   border-radius: 50%;
   margin-left: -10px;
@@ -22,6 +23,9 @@
   font-size: s.$fzItem_price;
 
   @media screen and (max-device-width: s.$min-width) {
+    font-size: s.$fzSale_Adapt;
+  }
+  @media screen and (max-device-width: s.$max-device-width) {
     font-size: s.$fzSale_Adapt;
   }
 }

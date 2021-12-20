@@ -11,7 +11,7 @@ const storeInit = () =>
       const userData = await LocalStorage.getUserData();
       const currency = LocalStorage.getCurrency();
       if (userData) {
-        router.init(userData, currency);
+        router.init(currency);
         ShoppingList.showShoppingListCounter(userData.shoppingList);
         Wishlist.showWishlistCounter(userData.wishlist);
         window.dispatchEvent(new HashChangeEvent('hashchange'));

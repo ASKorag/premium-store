@@ -2,12 +2,12 @@
  * @module Router
  */
 
-import { IUser } from '@type/user';
 import { THRoute, TRouteCallback } from '@type/router';
-import LocalStorage, { CurrencyType } from '@classes/LocalStorage';
+import { TCurrency } from '@type/local-storage';
 
+import LocalStorage from '@classes/LocalStorage';
 import Item from '@classes/Item';
-import Navigation from '@classes/Navigation';
+import NavPanel from '@classes/NavPanel';
 import ProductAPI from '@api/product';
 
 /**
@@ -46,25 +46,23 @@ class HashRouter {
   /**
    * Метод для создания пути товара при перезагрузке страницы
    * @param hash хэш пути
-   * @param user пользователь из локального хранилища
-   * @param products список всех продуктов из локального хранилища
+   * @param currency валюта продуктов
    */
 
-  async createRoute(
-    hash: string,
-    user: IUser,
-    currency: CurrencyType,
-  ): Promise<boolean> {
-    console.log("createRoute   hash")
+  async createRoute(hash: string, currency: TCurrency): Promise<boolean> {
     const product = await ProductAPI.getProductsByList([hash], currency);
     if (product && product.length) {
       this.addRoute(hash, product[0].data.name, () => {
-        LocalStorage.getUserData().then((userData)=>{
-          if(userData){
-            Navigation.showMainNavContainer();
-            Item.showSelectedItem(product[0], userData, Item.createSelectedItem);
+        LocalStorage.getUserData().then((userData) => {
+          if (userData) {
+            NavPanel.showMainNavContainer();
+            Item.showSelectedItem(
+              product[0],
+              userData,
+              Item.createSelectedItem,
+            );
           }
-        })
+        });
       });
       window.dispatchEvent(new HashChangeEvent('hashchange'));
       return true;
@@ -101,11 +99,10 @@ class HashRouter {
 
   /**
    * Method for initializing the router
-   * @param user пользователь из локального хранилища
-   * @param products список всех продуктов из локального хранилища
+   * @param currency валюта продуктов
    */
 
-  init(user: IUser, currency: CurrencyType) {
+  init(currency: TCurrency) {
     window.addEventListener('hashchange', async () => {
       const hash = HashRouter.#getHash();
       const route = this.findRoute(hash);
@@ -115,7 +112,7 @@ class HashRouter {
         HashRouter.#changeTitle(route.title);
       } else {
         // пробуем создать путь сами
-        const isRouteCreated = await this.createRoute(hash, user, currency);
+        const isRouteCreated = await this.createRoute(hash, currency);
 
         if (!isRouteCreated) {
           HashRouter.#changeTitle('*****');

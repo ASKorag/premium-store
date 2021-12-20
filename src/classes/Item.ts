@@ -1,25 +1,29 @@
 import { IProduct } from '@type/product';
 import { IUser } from '@type/user';
+import { IAddEvent } from '@type/item';
+
 import ShoppingList from '@classes/ShoppingList';
 import Wishlist from '@classes/Wishlist';
-import HashRouter from '@classes/HashRouter';
+// import HashRouter from '@classes/HashRouter';
+
 import humanPrice from '@scripts/human-price';
 
-interface AddEvent {
-  (
-    event: string,
-    $element: HTMLElement,
-    eventFunction: (...args: any[]) => void,
-    once: boolean,
-    params: any[],
-  ): void;
-}
+/**
+ * Класс для работы с продуктом
+ */
 
 class Item {
+  /**
+   * Метод для создания карточки продукта на главной странице и страницах фильтров
+   * @param product исходный продукт
+   * @param userData текущий пользователь
+   // * @param router
+   */
+
   static createItem(
     product: IProduct,
-    userData: IUser,
-    router: HashRouter,
+    userData: IUser /* ,
+    router: HashRouter, */,
   ): HTMLElement {
     const $item = document.createElement('div');
     $item.classList.add('main-container-product');
@@ -49,9 +53,11 @@ class Item {
                               ${saleElement[1]}
                              </h2>
                             <span class="item-price">
-                              <span class="item-price-amount ${saleElement[3]}">${humanPrice(
-                                product.data.price.basic.cost,
-                              )} ${saleElement[2]}</span>
+                              <span class="item-price-amount ${
+                                saleElement[3]
+                              }">${humanPrice(product.data.price.basic.cost)} ${
+      saleElement[2]
+    }</span>
                               ${saleElement[0]}
                             </span>
                             <button class="main-container-description_button-purchase ${
@@ -95,17 +101,22 @@ class Item {
     return $item;
   }
 
+  /**
+   * Метод для создания карточки продукта на странице самого продукта
+   * @param product исходный продукт
+   * @param userData текущий пользователь
+   * @param addEvent
+   */
+
   static createSelectedItem(
     product: IProduct,
     userData: IUser,
-    addEvent: AddEvent,
+    addEvent: IAddEvent,
   ): HTMLElement {
     const isAddedToPurchase = userData.shoppingList.includes(product.data.id);
-    console.log(isAddedToPurchase);
     const $item: HTMLElement = document.createElement('div');
     $item.classList.add('item-container');
     $item.id = 'mainItem';
-    ``;
     const saleElement = Item.getSale(product);
     if (product) {
       $item.innerHTML = `
@@ -115,9 +126,11 @@ class Item {
           <img src=${product.data.images.span_1x1} alt="${product.data.name}"/>
           <div class="item-container-purchase">
               <div class="item-price">
-                        <span class="item-price-amount ${saleElement[3]}">${humanPrice(
-                          product.data.price.basic.cost,
-                        )} ${saleElement[2]}</span>
+                        <span class="item-price-amount ${
+                          saleElement[3]
+                        }">${humanPrice(product.data.price.basic.cost)} ${
+        saleElement[2]
+      }</span>
                         ${saleElement[0]}
               </div>
               <button class="item-purchase-button ${
@@ -126,7 +139,7 @@ class Item {
           </div>
           <div class="item-container-description">
                 <h3>Details</h3>
-                <div>${product.data.description || 'coming soon...'}</div>
+                <p>${product.data.description || 'coming soon...'}</p>
             </div>`;
     }
     const $purchaseButton: HTMLElement | null = $item.querySelector(
@@ -144,13 +157,20 @@ class Item {
     return $item;
   }
 
+  /**
+   * Метод для отображения карточки продукта
+   * @param product исходный продукт
+   * @param userData текущий пользователь
+   * @param createItem функция создания карточки продукта
+   */
+
   static showSelectedItem(
     product: IProduct,
     userData: IUser,
     createItem: (
       product: IProduct,
       userData: IUser,
-      addEvent: AddEvent,
+      addEvent: IAddEvent,
     ) => HTMLElement,
   ) {
     const $visualContainer: HTMLElement | null = document.getElementById(
@@ -176,6 +196,11 @@ class Item {
     }
   }
 
+  /**
+   * Метод для получения стоимостных данных продукта
+   * @param product исходный продукт
+   */
+
   static getSale(product: IProduct) {
     let priceAmount = '';
     let actualPrice = ``;
@@ -193,11 +218,20 @@ class Item {
             +product.data.price.basic.cost,
       );
       sale = `<span class='item-sale'>-${discountAmount}%</span>`;
-      currency = ``
+      currency = ``;
       priceAmount = 'price-sale';
     }
     return [actualPrice, sale, currency, priceAmount];
   }
+
+  /**
+   * Метод для добавления обработчиков
+   * @param event тип события
+   * @param $element элемент для навешивания обработчика
+   * @param eventFunction функция обработчика
+   * @param once срабатывание обработчика только 1 раз
+   * @param params параметры для функции обработчика
+   */
 
   static addEvent(
     event: string,

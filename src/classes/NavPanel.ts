@@ -1,4 +1,16 @@
-class Navigation {
+/**
+ * @module NavPanel
+ */
+
+/**
+ * Класс для работы с навигационной панелью
+ */
+
+class NavPanel {
+  /**
+   * Метод для создания навигационной панели
+   */
+
   static createMainNavContainer(): HTMLElement {
     const $mainNavContainer = document.createElement('div');
     $mainNavContainer.classList.add('main-nav-container');
@@ -15,11 +27,15 @@ class Navigation {
     return $mainNavContainer;
   }
 
+  /**
+   * Метод для показа навигационной панели
+   */
+
   static showMainNavContainer() {
     const $mainContainer: HTMLElement | null =
       document.getElementById('main-container-id');
     const $mainVisualContainer = document.createElement('div');
-    $mainVisualContainer.id="main-visual-container"
+    $mainVisualContainer.id = 'main-visual-container';
     if ($mainContainer) {
       $mainContainer.innerHTML = '';
       $mainContainer.append(this.createMainNavContainer());
@@ -28,4 +44,4 @@ class Navigation {
   }
 }
 
-export default Navigation;
+export default NavPanel;

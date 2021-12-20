@@ -1,6 +1,18 @@
+/**
+ * @module Popup
+ */
+
 import Popup from '@classes/Popup';
 
+/**
+ * Класс для работы со всплывающими окнами
+ */
+
 class PopupContainer {
+  /**
+   * Метод для открытия всплывающего окна
+   * @param event объект события, вызвавшего метод
+   */
   static openPopup(event: MouseEvent) {
     let popup;
     const $wrapper: HTMLElement | null =
@@ -54,6 +66,11 @@ class PopupContainer {
     }
   }
 
+  /**
+   * Метод для закрытия всплывающего окна
+   * @param event объект события, вызвавшего метод
+   */
+
   static closePopup(event: MouseEvent) {
     const $wrapper: HTMLElement | null =
       document.getElementById('popupWrapper'); // серый фон попапа
@@ -65,10 +82,8 @@ class PopupContainer {
     if (
       eventTarget === $wrapper || // врапперу (серому фону)
       eventTarget === document.querySelector('.pop-up-container span') || // крестику
-      eventTarget === document.querySelector('.pop-up-container button')
+      eventTarget === document.querySelector('.pop-up-container button') // кнопке ОК
     ) {
-      // кнопке ОК
-
       $wrapper?.classList.remove('opened-popup'); // сворачивает фраппер
       if ($wrapper) $wrapper.innerHTML = ''; // снести все, что осталось в обертке
     }

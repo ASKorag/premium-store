@@ -2,9 +2,10 @@
  * @module API
  */
 
-import instance from '@api/api';
 import { IUser } from '@type/user';
 import { IResponse } from '@type/api';
+
+import instance from '@api/api';
 
 /**
  * Class for working with users

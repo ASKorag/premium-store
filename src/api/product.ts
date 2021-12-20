@@ -2,10 +2,11 @@
  * @module API
  */
 
-import instance from '@api/api';
 import { IProduct, TFilter } from '@type/product';
 import { IResponse } from '@type/api';
-import { CurrencyType } from '@classes/LocalStorage';
+import { TCurrency } from '@type/local-storage';
+
+import instance from '@api/api';
 
 /**
  * Class for working with products
@@ -15,12 +16,12 @@ class ProductAPI {
   /**
    * Method for getting an array of objects by filter
    * @param filter preset filter
-   * @param currency
+   * @param currency валюта товара
    */
 
   static async getProductsByFilter(
     filter: TFilter | 'All',
-    currency: CurrencyType,
+    currency: TCurrency,
   ) {
     try {
       const response = await instance.get<IResponse<IProduct[]>>(
@@ -33,9 +34,9 @@ class ProductAPI {
   }
   /**
    * Method for getting an array of objects by filter
-   * @param pageNumber
-   * @param pageSize
-   * @param currency
+   * @param pageNumber номер загружаемой "страницы" продуктов
+   * @param pageSize количество загружаемых продуктов за 1 раз
+   * @param currency валюта для загрузки
    */
 
   static async getAllProductsByLazy(
@@ -61,12 +62,12 @@ class ProductAPI {
   /**
    * Method for getting an array of products by array of product ID
    * @param listProductsID array of product ID
-   * @param currency
+   * @param currency валюта товара
    */
 
   static async getProductsByList(
     listProductsID: string[],
-    currency: CurrencyType,
+    currency: TCurrency,
   ) {
     try {
       const response = await instance.post<IResponse<IProduct[]>>('products', {

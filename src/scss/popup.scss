@@ -6,14 +6,16 @@
   transform: translateX(0%);
   transition: transform 0.5s ease-in;
 }
-.pop-up-wrapper.visible{
+
+.pop-up-wrapper.visible {
   width: 100%;
 }
+
 .pop-up-wrapper {
   height: 100%;
   width: 0;
   box-sizing: border-box;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
 
@@ -41,6 +43,7 @@
   //scrollbar-width: none; /* Firefox */
 
 }
+
 /*.pop-up-wrapper.hidden{
   width: 0;
 }*/

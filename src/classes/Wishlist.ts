@@ -1,17 +1,38 @@
+/**
+ * @module Wish List
+ */
+
 import { IProduct } from '@type/product';
 import { IUser } from '@type/user';
+
 import LocalStorage from '@classes/LocalStorage';
 import ShoppingList from '@classes/ShoppingList';
 import Item from '@classes/Item';
+
 import humanPrice from '@scripts/human-price';
 
+/**
+ * Класс для работы со списком желаний
+ */
+
 class Wishlist {
+  /**
+   * Метод для создания шапки в списке желаний
+   * @param name текст шапки
+   */
+
   static createHeaderList(name: string) {
     const $header = document.createElement('div');
     $header.innerHTML = `${name}`;
     $header.classList.add('list-header-container');
     return $header;
   }
+
+  /**
+   * Метод для создания карточки продукта в списке желаний
+   * @param product исходный продукт
+   * @param userData текущий пользователь
+   */
 
   static createWishlistItem(product: IProduct, userData: IUser) {
     const isAddedToPurchase = userData.shoppingList.includes(product.data.id);
@@ -33,9 +54,11 @@ class Wishlist {
                     <div>
                         <button class="item-description-likeBtn button-like_active"></button>
                         <span class="item-purchase-prise">
-                          <span class="item-price-amount ${saleElement[3]}">${humanPrice(
-                            product.data.price.basic.cost,
-                          )} ${saleElement[2]}</span>
+                          <span class="item-price-amount ${
+                            saleElement[3]
+                          }">${humanPrice(product.data.price.basic.cost)} ${
+      saleElement[2]
+    }</span>
                           ${saleElement[0]}
                         </span>
                         <button class="item-purchase-button ${
@@ -47,6 +70,11 @@ class Wishlist {
     return $item;
   }
 
+  /**
+   * Метод для создания пустого списка желаний
+   * @param text отображаемый текст
+   */
+
   static createEmptyListItems(text: string) {
     const $item: HTMLElement = document.createElement('div');
     $item.classList.add('item-filtered-container');
@@ -54,7 +82,13 @@ class Wishlist {
     return $item;
   }
 
-  static addEvent ($item: HTMLElement, product: IProduct) {
+  /**
+   * Методя для добавления обработчиков на кнопки в карточке продукта в списке желаний
+   * @param $item кнопка в карточке продукта
+   * @param product исходный продукт
+   */
+
+  static addEvent($item: HTMLElement, product: IProduct) {
     const $likeButton: any = $item.querySelector('.item-description-likeBtn');
     if ($likeButton) {
       Item.addEvent(
@@ -77,6 +111,10 @@ class Wishlist {
       );
     }
   }
+
+  /**
+   * Метод для создания списка желаний
+   */
 
   static async createWishlist() {
     const wishlistData = await LocalStorage.getListData('wishlist');
@@ -101,7 +139,11 @@ class Wishlist {
     }
   }
 
-  // show number of wishlist
+  /**
+   * Метод для показа счётчика товаров в списке желаний
+   * @param wishList текущий список желаний
+   */
+
   static showWishlistCounter(wishList: string[]): void {
     const $wishListCounter: HTMLElement | null = document.querySelector(
       '.wishlist-span-container',
@@ -111,19 +153,22 @@ class Wishlist {
     }
   }
 
-  // change product in wishlist
+  /**
+   * Метод для изменения счётчика товаров в списке желаний
+   * @param product исходный продукт
+   * @param showWishList
+   * @param $buttonElement элемент, вызвавший изменение счётчика
+   */
+
   static changeWishlistCounter(
     product: IProduct,
     showWishList: (wishlist: string[]) => void,
     $buttonElement: HTMLElement,
   ): void {
-    const data = LocalStorage.changeLocalWishlist('user', product.data.id);
+    const data = LocalStorage.changeUserProductList(product.data.id, 'wishlist');
     if (data) {
       showWishList(data.data.wishlist);
       $buttonElement.classList.toggle('button-like_active');
-      setTimeout(() => {
-        LocalStorage.sendUserData();
-      });
     }
   }
 }
